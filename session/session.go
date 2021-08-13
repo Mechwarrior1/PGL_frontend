@@ -2,11 +2,12 @@
 package session
 
 import (
-	"client/jwtsession"
 	"errors"
 	"fmt"
 	"net/http"
 	"time"
+
+	"github.com/Mechwarrior1/PGL_frontend/jwtsession"
 
 	"github.com/labstack/echo"
 	uuid "github.com/satori/go.uuid"

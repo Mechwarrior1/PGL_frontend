@@ -3,9 +3,6 @@ package controller
 
 import (
 	"bytes"
-	"client/encrypt"
-	"client/jwtsession"
-	"client/session"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -18,6 +15,10 @@ import (
 	"strings"
 	"text/template"
 	"time"
+
+	"github.com/Mechwarrior1/PGL_frontend/encrypt"
+	"github.com/Mechwarrior1/PGL_frontend/jwtsession"
+	"github.com/Mechwarrior1/PGL_frontend/session"
 
 	"github.com/labstack/echo"
 	uuid "github.com/satori/go.uuid"

@@ -47,8 +47,8 @@ jobs: #job to execute on event
       if: always() #always happen
       with: 
         files: |
-          client/report_client_test.xml #uses a file created earlier
-          client/report_client_coverage.html #uses a file created earlier
+          report_client_test.xml #uses a file created earlier
+          report_client_coverage.html #uses a file created earlier
       
     - if: ${{ success() }}
       name: Export report
@@ -56,8 +56,8 @@ jobs: #job to execute on event
       
     - name: Prepare documents
       run: |
-        mv client/report_client_test.xml ./upload 
-        mv client/report_client_coverage.html ./upload 
+        mv report_client_test.xml ./upload 
+        mv report_client_coverage.html ./upload 
       
     - name: Prepare artifacts
       uses: actions/upload-artifact@v2

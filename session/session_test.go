@@ -1,10 +1,11 @@
 package session
 
 import (
-	"client/jwtsession"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/Mechwarrior1/PGL_frontend/jwtsession"
 
 	"github.com/labstack/echo"
 	"github.com/stretchr/testify/assert"

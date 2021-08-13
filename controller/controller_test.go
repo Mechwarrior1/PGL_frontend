@@ -2,8 +2,6 @@ package controller
 
 import (
 	"bytes"
-	"client/jwtsession"
-	"client/session"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -17,6 +15,9 @@ import (
 	"testing"
 	"text/template"
 	"time"
+
+	"github.com/Mechwarrior1/PGL_frontend/jwtsession"
+	"github.com/Mechwarrior1/PGL_frontend/session"
 
 	"github.com/labstack/echo"
 	"github.com/stretchr/testify/assert"
