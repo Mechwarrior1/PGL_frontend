@@ -5,13 +5,15 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"os"
 	"text/template"
+	"time"
 
 	"github.com/Mechwarrior1/PGL_frontend/controller"
-	"github.com/Mechwarrior1/PGL_frontend/encrypt"
 	"github.com/Mechwarrior1/PGL_frontend/jwtsession"
 	"github.com/Mechwarrior1/PGL_frontend/session"
 
+	"github.com/joho/godotenv"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 )
@@ -40,13 +42,20 @@ func StartServer() (http.Server, *echo.Echo, error) {
 	}
 	e.Renderer = t
 
+	// check environment for the database url
+	err := godotenv.Load("go.env")
+	if err != nil {
+		fmt.Println("unable to load env variables", err.Error())
+	}
+
 	client := &http.Client{}
 	sessionMgr := &session.Session{
 		MapSession: &map[string]session.SessionStruct{},
-		ApiKey:     string(encrypt.DecryptFromFile("secure/apikey")),
+		ApiKey:     os.Getenv("API_KEY"),
 		Client:     client,
+		BaseURL:    os.Getenv("BASE_URL"),
 	}
-
+	fmt.Println("connected to api address: ", sessionMgr.BaseURL)
 	searchSession := make(map[string]controller.SearchSession)
 
 	// c1, c2 := loggerGo()
@@ -56,7 +65,7 @@ func StartServer() (http.Server, *echo.Echo, error) {
 	// key1 = anonFunc() //decrypt api key from file
 
 	jwtWrapper := &jwtsession.JwtWrapper{
-		string(encrypt.DecryptFromFile("secure/secretkey.txt")),
+		os.Getenv("SECRET_JWT"),
 		"GoRecycle",
 		10,
 	}
@@ -146,6 +155,17 @@ func StartServer() (http.Server, *echo.Echo, error) {
 
 	go sessionMgr.PruneOldSessions()
 
+	//check if api server is ready
+	go func() {
+		for {
+			response, err := controller.TapApi("GET", nil, "ready", sessionMgr)
+			if err != nil {
+				fmt.Println("Issue with api: ", err.Error(), (*response)["ErrorMsg"])
+			}
+			time.Sleep(240 * time.Second)
+		}
+	}()
+
 	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 
 	return s, e, nil
@@ -153,7 +173,8 @@ func StartServer() (http.Server, *echo.Echo, error) {
 
 func main() {
 	s, e, _ := StartServer()
-	if err := s.ListenAndServeTLS("secure//cert.pem", "secure//key.pem"); err != nil && err != http.ErrServerClosed {
+	// if err := s.ListenAndServeTLS("secure//cert.pem", "secure//key.pem"); err != nil && err != http.ErrServerClosed {
+	if err := s.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 		e.Logger.Fatal(err)
 	}
 }

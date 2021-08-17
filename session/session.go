@@ -19,6 +19,7 @@ type (
 		MapSession *map[string]SessionStruct // maps UUID to date (int64)
 		ApiKey     string
 		Client     ClientDo
+		BaseURL    string
 	}
 
 	SessionStruct struct {
