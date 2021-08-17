@@ -149,7 +149,7 @@ func StartServer() (http.Server, *echo.Echo, error) {
 		Format: "method=${method}, uri=${uri}, status=${status}, err=${error}, path=${path}, time=${time_unix}\n",
 	}))
 
-	port := "5221"
+	port := os.Getenv("SECRET_JWT")
 	fmt.Println("listening at port " + port)
 	s := http.Server{Addr: ":" + port, Handler: e}
 
