@@ -2,7 +2,6 @@
 package session
 
 import (
-	"errors"
 	"fmt"
 	"net/http"
 	"time"
@@ -146,7 +145,7 @@ func (s *Session) GetCookieJwt(c echo.Context, jwtWrapper *jwtsession.JwtWrapper
 		}
 
 		NewCookie(c, 10*60, newJwt)
-		return claims, errors.New("id not found, generated new")
+		return claims, nil //errors.New("id not found, generated new")
 
 	} else {
 		claims, err := jwtWrapper.ValidateToken(goRecycleCookie.Value)
