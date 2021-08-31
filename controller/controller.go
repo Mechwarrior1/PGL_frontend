@@ -81,7 +81,7 @@ func checkLoggedIn(c echo.Context, jwtWrapper *jwtsession.JwtWrapper, sessionMgr
 	}
 
 	if err != nil {
-		// session.UpdateJwt("error", "An error has occurred", jwtContext, c, jwtWrapper)
+		session.UpdateJwt("error", "An error has occurred", jwtContext, c, jwtWrapper)
 		fmt.Println("jwt error: ", err.Error())
 		return jwtClaim, jwtContext, errors.New("jwt error")
 	}
